@@ -2,42 +2,53 @@
 
 import streamlit as st
 import pandas as pd 
-import src.data as data 
-import src.datetime as datetime
-import src.numeric as numeric
-import src.text as text
+# import src.data as data # this is not working yet, aim to import data.py from the src folder
+# import src.datetime as datetime
+# import src.numeric as numeric
+# import src.text as text
 
 def main():
-    st.title("Data Explorer Tool")
+    st.title('Data Explorer Tool')
 
-    menu = ["Dataset","About"]
-    choice = st.sidebar.selectbox("Menu", menu)
+    menu = ['Dataset','About']
+    choice = st.sidebar.selectbox('Menu', menu)
 
-    if choice == "Dataset":
-        data_file = st.file_uploader("Choose a CSV file",type = ["csv"])
-        if st.button("Process"):
-            if data_file is not None:
+    if choice == 'Dataset':
+        data_file = st.file_uploader('Choose a CSV file',type = ["csv"])
+        #if st.button('Process'): # button not working with slider, hence remove from the code
+        if data_file is not None:
                 df = pd.read_csv(data_file)
                 dataTypeSeries = df.dtypes
+                st.subheader('1. Overall information of the dataset')
+                
 
-                st.write("""**Types of Columns**""")
-                st.write(dataTypeSeries.astype(str))
+                st.subheader('2. Information on numeric columns')
 
-                st.write("""**Top Rows of Table**""")
-                st.dataframe(df.head(5))
+
+                st.subheader('3. Information on text columns')
+
+
+                st.subheader('4. Information on datetime columns')
+
+
+                # st.write("""**Types of Columns**""")
+                # st.write(dataTypeSeries.astype(str))
+
+            #     st.write("""**Top Rows of Table**""")
+            #     st.dataframe(df.head(5))
             
-            # change the datetime column type
-                datetime.transform(df)
-                st.dataframe()
+            # # change the datetime column type
+            #     #datetime.transform(df)
+            #     st.dataframe()
 
-            # Display name of column as subtitle
-                datecol = "column name of date values"
-                st.subheader('4.0 Field Name: {}'.format(datecol))           
+            # # Display name of column as subtitle
+            #     datecol = "column name of date values"
+            #     st.subheader('4.0 Field Name: {}'.format(datecol))           
 
     else:
-        st.subheader("About")
-        st.text("DSP - AT3 Streamlit Web App")
-        st.text("Group 9")
+        st.subheader('About')
+        st.text('DSP - AT3 Streamlit Web App')
+        st.text('Group 9')
 		
 
 
