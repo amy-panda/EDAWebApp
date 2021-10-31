@@ -9,11 +9,7 @@ class DateColumn:
   col_name: str
   serie: pd.Series
 
-
-import streamlit as st
-import pandas as pd 
-
-
+  #formular to transform column, but not working yet
   def transform(self):
       df = self
       types = {'-':None
