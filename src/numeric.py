@@ -1,5 +1,6 @@
 # To be filled by students
 import streamlit as st
+import seaborn as sns
 from dataclasses import dataclass
 import pandas as pd
 
@@ -7,77 +8,60 @@ import pandas as pd
 
 @dataclass
 class NumericColumn:
+
   col_name: str
   serie: pd.Series
  
   def get_name(self):
-    """
-    Return name of selected column
-    """
-    return None
+    return self.col_name
 
   def get_unique(self):
-    """
-    Return number of unique values for selected column
-    """
-    return None
+    return self.serie.unique().shape[0]
 
   def get_missing(self):
-    """
-    Return number of missing values for selected column
-    """
-    return None
+    return self.serie.isnull().sum()
 
   def get_zeros(self):
-    """
-    Return number of occurrence of 0 value for selected column
-    """
-    return None
+    return self.serie[self.serie == 0].count()
 
   def get_negatives(self):
-    """
-    Return number of negative values for selected column
-    """
-    return None
+    return self.serie[self.serie < 0].count()
 
   def get_mean(self):
-    """
-    Return the average value for selected column
-    """
-    return None
+    return self.serie.mean()
 
   def get_std(self):
-    """
-    Return the standard deviation value for selected column
-    """
-    return None
+    return self.serie.std()
   
   def get_min(self):
-    """
-    Return the minimum value for selected column
-    """
-    return None
+    return self.serie.min()
 
   def get_max(self):
-    """
-    Return the maximum value for selected column
-    """
-    return None
+    return self.serie.max()
 
   def get_median(self):
-    """
-    Return the median value for selected column
-    """
-    return None
+    return self.serie.median()
 
   def get_histogram(self):
-    """
-    Return the generated histogram for selected column
-    """
-    return None
+    return sns.histplot(self.serie)
 
   def get_frequent(self):
-    """
-    Return the Pandas dataframe containing the occurrences and percentage of the top 20 most frequent values
-    """
-    return None
+
+    temp = self.serie.unique()
+    temp = temp[::-1][:20]
+
+    occurrence = []
+    percentage = []
+
+    for val in temp:
+
+      cnt = self.serie[self.serie == val].count()
+      occurrence.append(cnt)
+      percentage.append(cnt / self.serie.shape[0] * 100)
+
+    df = pd.DataFrame()
+    df['value'] = temp
+    df['occurrences'] = occurrence
+    df['percentage'] = percentage
+
+    return df.sort_values('occurrences', ascending=False)
