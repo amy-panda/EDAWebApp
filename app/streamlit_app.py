@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 import sys
-sys.path.insert(0, 'src')
+sys.path.insert(0, '..\src')
 import numeric
 import matplotlib.pyplot as plt
 
