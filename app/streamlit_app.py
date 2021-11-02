@@ -4,6 +4,7 @@ import os
 import sys
 sys.path.insert(0, '..\src')
 import numeric
+import text
 import matplotlib.pyplot as plt
 
 
@@ -67,6 +68,57 @@ def Test_Text():
     new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">3. Text Column Information</p>'
     st.markdown(new_title, unsafe_allow_html=True)
 
+    for i, column in enumerate(text_columns):
+        values = []
+
+        obj = text.TextColumn(col_name=column, serie=data[column])
+
+        values.append(obj.get_unique())
+        values.append(obj.get_missing())
+        values.append(obj.get_empty())
+        values.append(obj.get_whitespace())
+        values.append(obj.get_lowercase())
+        values.append(obj.get_uppercase())
+        values.append(obj.get_alphabet())
+        values.append(obj.get_digit())
+        values.append(obj.get_mode())
+
+        st.write("")
+        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;">3.{i} Field Name: <strong>{column}</strong></p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+
+        df = pd.DataFrame()
+        df['value'] = values
+
+        df.index = ['Number of Unique Values',
+                    'Number of Rows with Missing Values',
+                    'Number of Empty Rows',
+                    'Number of Rows with Only Whitespace',
+                    'Number of Rows with Only Lowercases',
+                    'Number of Rows with Only Uppercases',
+                    'Number of Rows with Only Alphabet',
+                    'Number of Rows with Only Digits',
+                    'Mode Value']
+
+        st.dataframe(df)
+
+        print("")
+        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Bar Chart</strong></p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+
+        # fig, ax = plt.subplots(figsize=(20, 7))
+        # plt.grid(axis='y')
+        # obj.get_histogram()
+        # plt.xlabel('Value')
+        # plt.ylabel('Count')
+        # st.pyplot(fig)
+
+        st.write("")
+
+        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Most Frequent Values</strong></p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+        df2 = obj.get_frequent()
+        st.write(df2)
 
 
 def Test_Datetime():
@@ -82,7 +134,7 @@ if __name__ == '__main__':
         data = pd.read_csv(file)
         numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
         Test_Numeric()
-
+        text_columns = list(data.dtypes[(data.dtypes == 'object') | (data.dtypes == 'category')].index)
         Test_Text()
         Test_Datetime()
     except:
