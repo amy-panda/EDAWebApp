@@ -19,14 +19,14 @@ class TextColumn:
     """
     Return number of unique values for selected column
     """
-    # return self.nunique()
+  
     return self.serie.nunique()
   
   def get_missing(self):
     """
     Return number of missing values for selected column
     """
-    # return self.isna().sum()
+
     return self.serie.isnull().sum()
     
 
@@ -34,7 +34,7 @@ class TextColumn:
     """
     Return number of rows with empty string for selected column
     """
-    # return (self=='').sum()
+
     return self.serie[self.serie==''].count()
 
   def get_whitespace(self):
