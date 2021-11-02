@@ -63,6 +63,18 @@ def Test_Numeric():
         df2 = obj.get_frequent()
         st.write(df2)
 
+def Test_Text():
+    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">3. Text Column Information</p>'
+    st.markdown(new_title, unsafe_allow_html=True)
+
+
+
+def Test_Datetime():
+    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">4. Datetime Column Information</p>'
+    st.markdown(new_title, unsafe_allow_html=True)
+
+
+
 
 if __name__ == '__main__':
 
@@ -72,5 +84,7 @@ if __name__ == '__main__':
         data = pd.read_csv(file)
         numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
         Test_Numeric()
+        Test_Text()
+        Test_Datetime()
     except:
         pass
