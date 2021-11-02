@@ -13,16 +13,15 @@ class TextColumn:
     """
     Return name of selected column
     """
-    # self.col_name=pd.DataFrame(self).columns
     return self.col_name
-
+  
   def get_unique(self):
     """
     Return number of unique values for selected column
     """
     # return self.nunique()
-    return self.serie.unique().shape[0]
-
+    return self.serie.nunique()
+  
   def get_missing(self):
     """
     Return number of missing values for selected column
@@ -72,7 +71,7 @@ class TextColumn:
     """
     Return the mode value for selected column
     """
-    return self.serie.mode()
+    return self.serie.mode()[0]
 
 
   def get_barchart(self):
@@ -80,12 +79,12 @@ class TextColumn:
     Return the generated bar chart for selected column
     """
 
-    df2=pd.DataFrame({
+    df1=pd.DataFrame({
       self.col_name:self.serie.unique(),
       'Count of Records':self.serie.value_counts()
     })
 
-    return alt.Chart(df2).mark_bar().encode(
+    return alt.Chart(df1).mark_bar().encode(
         x=alt.X(self.col_name,sort=None),
         y='Count of Records')
 
@@ -94,8 +93,25 @@ class TextColumn:
     """
     Return the Pandas dataframe containing the occurrences and percentage of the top 20 most frequent values
     """
-    sr=self.serie
-    df_f=pd.DataFrame({'occurrence':sr.value_counts(), 'percentage':sr.value_counts(normalize=True)}).reset_index().rename(columns={'index':'value'})
-    return df_f
+    # df_f=pd.DataFrame({'occurrence':self.serie.value_counts(), 'percentage':self.serie.value_counts(normalize=True)}).reset_index().rename(columns={'index':'value'})
+    # return df_f
+    
+    temp = self.serie.unique()
+    temp = temp[::-1][:20]
 
-  
+    occurrence = []
+    percentage = []
+
+    for val in temp:
+
+      cnt = self.serie[self.serie == val].count()
+      occurrence.append(cnt)
+      percentage.append(cnt / self.serie.shape[0])
+
+    df = pd.DataFrame()
+    df['value'] = temp
+    df['occurrence'] = occurrence
+    df['percentage'] = percentage
+
+  # sort by occurrency in descending order and then by value in ascending order (alphabetically)
+    return df.sort_values(['occurrence','value'], ascending=(False,True))
