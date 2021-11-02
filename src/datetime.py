@@ -3,11 +3,37 @@ import streamlit as st
 from dataclasses import dataclass
 import pandas as pd
 
-
+## 
 @dataclass
 class DateColumn:
   col_name: str
   serie: pd.Series
+
+  #formular to transform column, but not working yet
+  def transform(self):
+      df = self
+      types = {'-':None
+            ,'Boolean':'?'
+            ,'Byte':'b'
+            ,'Interger':'i'
+            ,'Flating point':'f'
+            ,'Date Time':'M'
+            ,'Time':'m'
+            ,'Unicode String':'U'
+            ,'Object':'O'}
+      new_types = {}
+
+      expander_types = st.expander('Convert Data Types')
+
+      for i, col in enumerate(df.columns):
+        txt = 'Convert {} from {} to:'.format(col, df[col].dtypes)
+        expander_types.markdown(txt, unsafe_allow_html=True)
+        new_types[i] = expander_types.selectbox('Field to be converted:'
+                                                ,[*types]
+                                                ,index = 0
+                                                ,key = i)
+      return df
+
 
   def get_name(self):
     """

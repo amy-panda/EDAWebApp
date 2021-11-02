@@ -1,28 +1,20 @@
-# To be filled by students
 import streamlit as st
 import pandas as pd
 import os
 import sys
-sys.path.insert(0,'..')
+sys.path.insert(0, '..')
 import numeric
 import matplotlib.pyplot as plt
 
-url = 'https://raw.githubusercontent.com/dipalira/Melbourne-Housing-Data-Kaggle/master/Data/Melbourne_housing_FULL.csv'
-data = pd.read_csv(url)
-
-numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
-
 
 def Test_Numeric():
-
     new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">2. Numeric Column Information</p>'
     st.markdown(new_title, unsafe_allow_html=True)
 
-    for i,column in enumerate(numeric_columns):
-
+    for i, column in enumerate(numeric_columns):
         values = []
 
-        obj = numeric.NumericColumn(col_name = column, serie = data[column])
+        obj = numeric.NumericColumn(col_name=column, serie=data[column])
 
         values.append(obj.get_unique())
         values.append(obj.get_missing())
@@ -57,8 +49,8 @@ def Test_Numeric():
         new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Histogram</strong></p>'
         st.markdown(new_title, unsafe_allow_html=True)
 
-        fig, ax = plt.subplots(figsize = (20,7))
-        plt.grid(axis = 'y')
+        fig, ax = plt.subplots(figsize=(20, 7))
+        plt.grid(axis='y')
         obj.get_histogram()
         plt.xlabel('Value')
         plt.ylabel('Count')
@@ -72,7 +64,13 @@ def Test_Numeric():
         st.write(df2)
 
 
-
-
 if __name__ == '__main__':
-    Test_Numeric()
+
+    file = st.file_uploader("Upload file", type=("csv"))
+    st.write("")
+    try:
+        data = pd.read_csv(file)
+        numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
+        Test_Numeric()
+    except:
+        pass

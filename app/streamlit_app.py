@@ -74,8 +74,6 @@ def Test_Datetime():
     st.markdown(new_title, unsafe_allow_html=True)
 
 
-
-
 if __name__ == '__main__':
 
     file = st.file_uploader("Upload file", type=("csv"))
@@ -84,17 +82,9 @@ if __name__ == '__main__':
         data = pd.read_csv(file)
         numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
         Test_Numeric()
+
         Test_Text()
         Test_Datetime()
     except:
         pass
-
-
-
-
-
-
-
-
-
 
