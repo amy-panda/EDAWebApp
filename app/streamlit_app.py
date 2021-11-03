@@ -53,8 +53,8 @@ def Test_Numeric():
         fig, ax = plt.subplots(figsize=(20, 7))
         plt.grid(axis='y')
         obj.get_histogram()
-        plt.xlabel('Value')
-        plt.ylabel('Count')
+        plt.xlabel('Value') # xlabel will be the obj.col_name (binned)
+        plt.ylabel('Count') #ylabel will be 'Count of Records'
         st.pyplot(fig)
 
         st.write("")
@@ -64,7 +64,7 @@ def Test_Numeric():
         df2 = obj.get_frequent()
         st.write(df2)
 
-def Test_Text():
+def Func_Text():
     new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">3. Text Column Information</p>'
     st.markdown(new_title, unsafe_allow_html=True)
 
@@ -73,15 +73,18 @@ def Test_Text():
 
         obj = text.TextColumn(col_name=column, serie=data[column])
 
-        values.append(obj.get_unique())
-        values.append(obj.get_missing())
-        values.append(obj.get_empty())
-        values.append(obj.get_whitespace())
-        values.append(obj.get_lowercase())
-        values.append(obj.get_uppercase())
-        values.append(obj.get_alphabet())
-        values.append(obj.get_digit())
-        values.append(obj.get_mode())
+# convert all the result to string to ensure the same data type (string)
+    
+        values.append(str(obj.get_unique()))
+        values.append(str(obj.get_missing()))
+        values.append(str(obj.get_empty()))
+        values.append(str(obj.get_whitespace()))
+        values.append(str(obj.get_lowercase()))
+        values.append(str(obj.get_uppercase()))
+        values.append(str(obj.get_alphabet()))
+        values.append(str(obj.get_digit()))
+        values.append(str(obj.get_mode()))
+        
 
         st.write("")
         new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;">3.{i} Field Name: <strong>{column}</strong></p>'
@@ -106,12 +109,14 @@ def Test_Text():
         new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Bar Chart</strong></p>'
         st.markdown(new_title, unsafe_allow_html=True)
 
-        # fig, ax = plt.subplots(figsize=(20, 7))
-        # plt.grid(axis='y')
-        # obj.get_histogram()
-        # plt.xlabel('Value')
-        # plt.ylabel('Count')
-        # st.pyplot(fig)
+        fig, ax = plt.subplots(figsize=(15, 7))
+        plt.grid(axis='y')
+        plt.xticks(rotation=90)
+        obj.get_barchart()
+        plt.xlabel(obj.col_name)
+        plt.ylabel('Count of Records')
+        st.pyplot(fig)
+   
 
         st.write("")
 
@@ -135,7 +140,7 @@ if __name__ == '__main__':
         numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
         Test_Numeric()
         text_columns = list(data.dtypes[(data.dtypes == 'object') | (data.dtypes == 'category')].index)
-        Test_Text()
+        Func_Text()
         Test_Datetime()
     except:
         pass
