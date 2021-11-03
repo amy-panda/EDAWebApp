@@ -93,8 +93,6 @@ class TextColumn:
     """
     Return the Pandas dataframe containing the occurrences and percentage of the top 20 most frequent values
     """
-    # df_f=pd.DataFrame({'occurrence':self.serie.value_counts(), 'percentage':self.serie.value_counts(normalize=True)}).reset_index().rename(columns={'index':'value'})
-    # return df_f
     
     temp = self.serie.unique()
     temp = temp[::-1][:20]
