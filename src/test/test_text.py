@@ -1,14 +1,12 @@
 import unittest
 import pandas as pd
-import os
 import sys
 from pandas._libs.missing import NA
 import altair as alt
 from pandas.util.testing import assert_frame_equal
+sys.path.insert(0, '..')
+import text
 
-# if os.path.abspath(".") not in sys.path:
-#     sys.path.append(os.path.abspath("."))
-import src.text as text
 
 class TestTextColumn(unittest.TestCase):
     def setUp(self):  
