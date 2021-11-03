@@ -2,8 +2,9 @@ import streamlit as st
 import pandas as pd
 import os
 import sys
-sys.path.insert(0, '..')
-import numeric
+if os.path.abspath(".") not in sys.path: sys.path.append(os.path.abspath("."))
+from src.numeric import NumericColumn
+
 import matplotlib.pyplot as plt
 
 
@@ -14,7 +15,7 @@ def Test_Numeric():
     for i, column in enumerate(numeric_columns):
         values = []
 
-        obj = numeric.NumericColumn(col_name=column, serie=data[column])
+        obj = NumericColumn(col_name=column, serie=data[column])
 
         values.append(obj.get_unique())
         values.append(obj.get_missing())
