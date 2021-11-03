@@ -2,7 +2,7 @@
 import streamlit as st
 from dataclasses import dataclass
 import pandas as pd
-import altair as alt
+import matplotlib.pyplot as plt
 
 @dataclass
 class TextColumn:
@@ -79,14 +79,9 @@ class TextColumn:
     Return the generated bar chart for selected column
     """
 
-    df1=pd.DataFrame({
-      self.col_name:self.serie.unique(),
-      'Count of Records':self.serie.value_counts()
-    })
-
-    return alt.Chart(df1).mark_bar().encode(
-        x=alt.X(self.col_name,sort=None),
-        y='Count of Records')
+    list_x=list(self.serie.unique())
+    list_y=list(self.serie.value_counts())
+    plt.bar(list_x,list_y)
 
 
   def get_frequent(self):
@@ -113,3 +108,4 @@ class TextColumn:
 
   # sort by occurrency in descending order and then by value in ascending order (alphabetically) and ignoring the index
     return df.sort_values(['occurrence','value'], ascending=(False,True),ignore_index=True)
+
