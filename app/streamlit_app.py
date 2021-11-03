@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 import os
 import sys
-sys.path.insert(0, '..\src')
-import numeric
-import text
+if os.path.abspath(".") not in sys.path: sys.path.append(os.path.abspath("."))
+from src.text import TextColumn
+
 import matplotlib.pyplot as plt
 
 
@@ -71,9 +71,9 @@ def Func_Text():
     for i, column in enumerate(text_columns):
         values = []
 
-        obj = text.TextColumn(col_name=column, serie=data[column])
+        obj = TextColumn(col_name=column, serie=data[column])
 
-# convert all the result to string to ensure the same data type (string)
+    # convert all the result to string to ensure the same data type (string)
     
         values.append(str(obj.get_unique()))
         values.append(str(obj.get_missing()))
@@ -126,10 +126,18 @@ def Func_Text():
         st.write(df2)
 
 
-def Test_Datetime():
-    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">4. Datetime Column Information</p>'
-    st.markdown(new_title, unsafe_allow_html=True)
+# def Test_Datetime():
+#     new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">4. Datetime Column Information</p>'
+#     st.markdown(new_title, unsafe_allow_html=True)
 
+# for i, column in enumerate(datetime_columns):
+#         values = []
+
+#         obj = datetime.DateColumn(col_name=column, serie=data[column])
+        
+#         values.append(str(obj.get_unique()))
+        
+        
 
 if __name__ == '__main__':
 
@@ -141,7 +149,8 @@ if __name__ == '__main__':
         Test_Numeric()
         text_columns = list(data.dtypes[(data.dtypes == 'object') | (data.dtypes == 'category')].index)
         Func_Text()
-        Test_Datetime()
+        # datetime_columns = list(data['Last_Update'])
+        # Test_Datetime()
     except:
         pass
 
