@@ -1,1 +1,8 @@
 # To be filled by students
+@maedehme
+pandas 
+xlrd
+openpyxl
+seaborn
+matplotlib
+streamlit

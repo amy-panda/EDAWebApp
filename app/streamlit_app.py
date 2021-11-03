@@ -1,56 +1,147 @@
-# To be filled by students
-
 import streamlit as st
-import pandas as pd 
-# import src.data as data # this is not working yet, aim to import data.py from the src folder
-# import src.datetime as datetime
-# import src.numeric as numeric
-# import src.text as text
-
-def main():
-    st.title('Data Explorer Tool')
-
-    menu = ['Dataset','About']
-    choice = st.sidebar.selectbox('Menu', menu)
-
-    if choice == 'Dataset':
-        data_file = st.file_uploader('Choose a CSV file',type = ["csv"])
-        #if st.button('Process'): # button not working with slider, hence remove from the code
-        if data_file is not None:
-                df = pd.read_csv(data_file)
-                dataTypeSeries = df.dtypes
-                st.subheader('1. Overall information of the dataset')
-                
-
-                st.subheader('2. Information on numeric columns')
+import pandas as pd
+import os
+import sys
+sys.path.insert(0, '..\src')
+import numeric
+import text
+import matplotlib.pyplot as plt
 
 
-                st.subheader('3. Information on text columns')
+def Test_Numeric():
+    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">2. Numeric Column Information</p>'
+    st.markdown(new_title, unsafe_allow_html=True)
+
+    for i, column in enumerate(numeric_columns):
+        values = []
+
+        obj = numeric.NumericColumn(col_name=column, serie=data[column])
+
+        values.append(obj.get_unique())
+        values.append(obj.get_missing())
+        values.append(obj.get_zeros())
+        values.append(obj.get_negatives())
+        values.append(obj.get_mean())
+        values.append(obj.get_std())
+        values.append(obj.get_min())
+        values.append(obj.get_max())
+        values.append(obj.get_median())
+
+        st.write("")
+        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;">2.{i} Field Name: <strong>{column}</strong></p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+
+        df = pd.DataFrame()
+        df['value'] = values
+
+        df.index = ['Number of unique values',
+                    'Number of rows with missing values',
+                    'Number of rows with 0',
+                    'Number of rows with negative values',
+                    'Average value',
+                    'Standard deviation value',
+                    'Minimum value',
+                    'Maximum value',
+                    'Median value']
+
+        st.dataframe(df)
+
+        print("")
+        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Histogram</strong></p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+
+        fig, ax = plt.subplots(figsize=(20, 7))
+        plt.grid(axis='y')
+        obj.get_histogram()
+        plt.xlabel('Value') # xlabel will be the obj.col_name (binned)
+        plt.ylabel('Count') #ylabel will be 'Count of Records'
+        st.pyplot(fig)
+
+        st.write("")
+
+        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Most Frequent Values</strong></p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+        df2 = obj.get_frequent()
+        st.write(df2)
+
+def Func_Text():
+    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">3. Text Column Information</p>'
+    st.markdown(new_title, unsafe_allow_html=True)
+
+    for i, column in enumerate(text_columns):
+        values = []
+
+        obj = text.TextColumn(col_name=column, serie=data[column])
+
+# convert all the result to string to ensure the same data type (string)
+    
+        values.append(str(obj.get_unique()))
+        values.append(str(obj.get_missing()))
+        values.append(str(obj.get_empty()))
+        values.append(str(obj.get_whitespace()))
+        values.append(str(obj.get_lowercase()))
+        values.append(str(obj.get_uppercase()))
+        values.append(str(obj.get_alphabet()))
+        values.append(str(obj.get_digit()))
+        values.append(str(obj.get_mode()))
+        
+
+        st.write("")
+        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;">3.{i} Field Name: <strong>{column}</strong></p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+
+        df = pd.DataFrame()
+        df['value'] = values
+
+        df.index = ['Number of Unique Values',
+                    'Number of Rows with Missing Values',
+                    'Number of Empty Rows',
+                    'Number of Rows with Only Whitespace',
+                    'Number of Rows with Only Lowercases',
+                    'Number of Rows with Only Uppercases',
+                    'Number of Rows with Only Alphabet',
+                    'Number of Rows with Only Digits',
+                    'Mode Value']
+
+        st.dataframe(df)
+
+        print("")
+        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Bar Chart</strong></p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+
+        fig, ax = plt.subplots(figsize=(15, 7))
+        plt.grid(axis='y')
+        plt.xticks(rotation=90)
+        obj.get_barchart()
+        plt.xlabel(obj.col_name)
+        plt.ylabel('Count of Records')
+        st.pyplot(fig)
+   
+
+        st.write("")
+
+        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Most Frequent Values</strong></p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+        df2 = obj.get_frequent()
+        st.write(df2)
 
 
-                st.subheader('4. Information on datetime columns')
-
-
-                # st.write("""**Types of Columns**""")
-                # st.write(dataTypeSeries.astype(str))
-
-            #     st.write("""**Top Rows of Table**""")
-            #     st.dataframe(df.head(5))
-            
-            # # change the datetime column type
-            #     #datetime.transform(df)
-            #     st.dataframe()
-
-            # # Display name of column as subtitle
-            #     datecol = "column name of date values"
-            #     st.subheader('4.0 Field Name: {}'.format(datecol))           
-
-    else:
-        st.subheader('About')
-        st.text('DSP - AT3 Streamlit Web App')
-        st.text('Group 9')
-		
+def Test_Datetime():
+    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">4. Datetime Column Information</p>'
+    st.markdown(new_title, unsafe_allow_html=True)
 
 
 if __name__ == '__main__':
-	    main()
+
+    file = st.file_uploader("Upload file", type=("csv"))
+    st.write("")
+    try:
+        data = pd.read_csv(file)
+        numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
+        Test_Numeric()
+        text_columns = list(data.dtypes[(data.dtypes == 'object') | (data.dtypes == 'category')].index)
+        Func_Text()
+        Test_Datetime()
+    except:
+        pass
+
