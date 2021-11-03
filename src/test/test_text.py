@@ -1,12 +1,12 @@
 import unittest
 import pandas as pd
 import sys
+import os
 from pandas._libs.missing import NA
 import matplotlib.pyplot as plt
 from pandas.util.testing import assert_frame_equal
-sys.path.insert(0, '..')
-import text
-
+if os.path.abspath(".") not in sys.path: sys.path.append(os.path.abspath("."))
+from src.text import TextColumn
 
 class TestTextColumn(unittest.TestCase):
     def setUp(self):  
@@ -17,7 +17,7 @@ class TestTextColumn(unittest.TestCase):
     
     def test_get_name(self):
         df=pd.DataFrame(self.data)
-        tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+        tcol=TextColumn(col_name='ISO3',serie=df['ISO3'])        
         expected='ISO3'
         result=tcol.get_name()
         
@@ -25,7 +25,7 @@ class TestTextColumn(unittest.TestCase):
 
     def test_get_unique(self):
         df=pd.DataFrame(self.data)
-        tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+        tcol=TextColumn(col_name='ISO3',serie=df['ISO3'])
         expected=6
         result=tcol.get_unique()
         
@@ -34,7 +34,7 @@ class TestTextColumn(unittest.TestCase):
         
     def test_get_missing(self):
         df=pd.DataFrame(self.data)
-        tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+        tcol=TextColumn(col_name='ISO3',serie=df['ISO3'])
         expected=0
         result=tcol.get_missing()
         
@@ -42,7 +42,7 @@ class TestTextColumn(unittest.TestCase):
         
     def test_get_empty(self):
         df=pd.DataFrame(self.data)
-        tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+        tcol=TextColumn(col_name='ISO3',serie=df['ISO3'])
         expected=0
         result=tcol.get_empty()
         
@@ -51,7 +51,7 @@ class TestTextColumn(unittest.TestCase):
     
     def test_get_whitespace(self):
         df=pd.DataFrame(self.data)
-        tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+        tcol=TextColumn(col_name='ISO3',serie=df['ISO3'])
         expected=0
         result=tcol.get_whitespace()
         
@@ -60,7 +60,7 @@ class TestTextColumn(unittest.TestCase):
     
     def test_get_lowercase(self):
         df=pd.DataFrame(self.data)
-        tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+        tcol=TextColumn(col_name='ISO3',serie=df['ISO3'])
         expected=0
         result=tcol.get_lowercase()
         
@@ -69,7 +69,7 @@ class TestTextColumn(unittest.TestCase):
 
     def test_get_uppercase(self):
         df=pd.DataFrame(self.data)
-        tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+        tcol=TextColumn(col_name='ISO3',serie=df['ISO3'])
         expected=58
         result=tcol.get_uppercase()
         
@@ -78,7 +78,7 @@ class TestTextColumn(unittest.TestCase):
 
     def test_get_alphabet(self):
         df=pd.DataFrame(self.data)
-        tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+        tcol=TextColumn(col_name='ISO3',serie=df['ISO3'])
         expected=58
         result=tcol.get_alphabet()
         
@@ -87,7 +87,7 @@ class TestTextColumn(unittest.TestCase):
      
     def test_get_digit(self):
         df=pd.DataFrame(self.data)
-        tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+        tcol=TextColumn(col_name='ISO3',serie=df['ISO3'])
         expected=0
         result=tcol.get_digit()
         
@@ -95,7 +95,7 @@ class TestTextColumn(unittest.TestCase):
 
     def test_get_mode(self):
         df=pd.DataFrame(self.data)
-        tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+        tcol=TextColumn(col_name='ISO3',serie=df['ISO3'])
         expected='USA'
         result=tcol.get_mode()
         
@@ -114,7 +114,7 @@ class TestTextColumn(unittest.TestCase):
 
     def test_get_frequent(self):
         df=pd.DataFrame(self.data)
-        tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+        tcol=TextColumn(col_name='ISO3',serie=df['ISO3'])
         expected=pd.DataFrame({'value':['USA','ASM','GUM','MNP','PRI','VIR'],
                                'occurrence':[53,1,1,1,1,1],
                                'percentage':[53/58,1/58,1/58,1/58,1/58,1/58]})
