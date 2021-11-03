@@ -111,5 +111,5 @@ class TextColumn:
     df['occurrence'] = occurrence
     df['percentage'] = percentage
 
-  # sort by occurrency in descending order and then by value in ascending order (alphabetically)
-    return df.sort_values(['occurrence','value'], ascending=(False,True))
+  # sort by occurrency in descending order and then by value in ascending order (alphabetically) and ignoring the index
+    return df.sort_values(['occurrence','value'], ascending=(False,True),ignore_index=True)
