@@ -2,7 +2,7 @@ import unittest
 import pandas as pd
 import sys
 from pandas._libs.missing import NA
-import altair as alt
+import matplotlib.pyplot as plt
 from pandas.util.testing import assert_frame_equal
 sys.path.insert(0, '..')
 import text
@@ -101,18 +101,14 @@ class TestTextColumn(unittest.TestCase):
         
         self.assertEqual(result,expected)
 
-    ### Not sure how to test the menthod get_barchart yet
+    #this test is not working
     # def test_get_barchart(self):
-    #     df1=pd.DataFrame({'ISO3':['USA','ASM','GUM','MNP','PRI','VIR'],
-    #                       'Count of Records':[53,1,1,1,1,1]})
-    #     expected=alt.Chart(df1).mark_bar().encode(
-    #     x=alt.X('ISO3',sort=None),
-    #     y='Count of Records')
         
     #     df=pd.DataFrame(self.data)
     #     tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
+    #     expected=plt.bar(['USA','ASM','GUM','MNP','PRI','VIR'],[53,1,1,1,1,1])
     #     result=tcol.get_barchart()
-        
+
     #     self.assertEqual(result,expected)
 
 
