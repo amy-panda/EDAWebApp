@@ -81,7 +81,7 @@ class TextColumn:
 
     list_x=list(self.serie.unique())
     list_y=list(self.serie.value_counts())
-    plt.bar(list_x,list_y)
+    return plt.bar(list_x,list_y)
 
 
   def get_frequent(self):
