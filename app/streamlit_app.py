@@ -207,7 +207,7 @@ if __name__ == '__main__':
         st.write("")
 
         # set the selected columns
-        st.write(f'text column finished, now is the datetime col')
+
         datetimecol = st.multiselect(
 					'Which columns do you want to convert to dates'
 					,data.columns
