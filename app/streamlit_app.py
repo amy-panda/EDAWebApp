@@ -199,8 +199,8 @@ if __name__ == '__main__':
     st.write("")
     try:
         data = pd.read_csv(file)
-        numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
-        Test_Numeric()
+        #numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
+        #Test_Numeric()
 
         st.write("")
 
@@ -210,6 +210,7 @@ if __name__ == '__main__':
         st.write("")
 
         # set the selected columns
+        print(f'text column finished, now is the datetime col')
         datetimecol = 'Last_Update'
         # change type of the selected columns
         data[datetimecol] = pd.to_datetime(data[datetimecol])
