@@ -21,43 +21,56 @@ class DateColumn:
     """
     Return number of unique values for selected column
     """
-    return self.serie.isnull().sum()
+    return self.serie.unique().shape[0]
 
   def get_missing(self):
     """
     Return number of missing values for selected column
     """
-    return None
+    return self.serie.isnull().sum()
 
   def get_weekend(self):
     """
     Return number of occurrence of days falling during weekend (Saturday and Sunday)
     """
-    return None
+    startdate = self.serie.dt.date.min()
+    enddate = self.serie.dt.date.max()
+    weekend_ct = pd.bdate_range(startdate,enddate, 
+                      freq="C", weekmask="Sat Sun").size
+    return weekend_ct
 
   def get_weekday(self):
     """
     Return number of weekday days (not Saturday or Sunday)
     """
-    return None
+    startdate = self.serie.dt.date.min()
+    enddate = self.serie.dt.date.max()
+    weekdays_ct = pd.bdate_range(startdate,
+                      enddate).size
+    return weekdays_ct
   
   def get_future(self):
     """
     Return number of cases with future dates (after today)
     """
-    return None
+    today = pd.to_datetime("today").date()
+    futureday_ct = sum(self.serie.dt.date.unique()> today)
+
+    return futureday_ct
 
   def get_empty_1900(self):
     """
     Return number of occurrence of 1900-01-01 value
     """
-    return None
+    On19000101_ct = sum(self.serie.dt.date.unique() == pd.to_datetime('1990-01-01').date())
+    return On19000101_ct
 
   def get_empty_1970(self):
     """
     Return number of occurrence of 1970-01-01 value
     """
-    return None
+    On19700101_ct = sum(self.serie.dt.date.unique() == pd.to_datetime('1970-01-01').date())
+    return On19700101_ct
 
   def get_min(self):
     """
@@ -102,3 +115,4 @@ class DateColumn:
 
   # sort by occurrency in descending order and then by value in ascending order (alphabetically) and ignoring the index
     return df.sort_values(['occurrence','value'], ascending=(False,True),ignore_index=True)
+	
