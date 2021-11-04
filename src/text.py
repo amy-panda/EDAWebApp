@@ -2,7 +2,7 @@
 import streamlit as st
 from dataclasses import dataclass
 import pandas as pd
-import altair as alt
+import matplotlib.pyplot as plt
 
 @dataclass
 class TextColumn:
@@ -19,14 +19,14 @@ class TextColumn:
     """
     Return number of unique values for selected column
     """
-    # return self.nunique()
+  
     return self.serie.nunique()
   
   def get_missing(self):
     """
     Return number of missing values for selected column
     """
-    # return self.isna().sum()
+
     return self.serie.isnull().sum()
     
 
@@ -34,7 +34,7 @@ class TextColumn:
     """
     Return number of rows with empty string for selected column
     """
-    # return (self=='').sum()
+
     return self.serie[self.serie==''].count()
 
   def get_whitespace(self):
@@ -79,22 +79,15 @@ class TextColumn:
     Return the generated bar chart for selected column
     """
 
-    df1=pd.DataFrame({
-      self.col_name:self.serie.unique(),
-      'Count of Records':self.serie.value_counts()
-    })
-
-    return alt.Chart(df1).mark_bar().encode(
-        x=alt.X(self.col_name,sort=None),
-        y='Count of Records')
+    list_x=list(self.serie.unique())
+    list_y=list(self.serie.value_counts())
+    return plt.bar(list_x,list_y)
 
 
   def get_frequent(self):
     """
     Return the Pandas dataframe containing the occurrences and percentage of the top 20 most frequent values
     """
-    # df_f=pd.DataFrame({'occurrence':self.serie.value_counts(), 'percentage':self.serie.value_counts(normalize=True)}).reset_index().rename(columns={'index':'value'})
-    # return df_f
     
     temp = self.serie.unique()
     temp = temp[::-1][:20]
@@ -113,5 +106,6 @@ class TextColumn:
     df['occurrence'] = occurrence
     df['percentage'] = percentage
 
-  # sort by occurrency in descending order and then by value in ascending order (alphabetically)
-    return df.sort_values(['occurrence','value'], ascending=(False,True))
+  # sort by occurrency in descending order and then by value in ascending order (alphabetically) and ignoring the index
+    return df.sort_values(['occurrence','value'], ascending=(False,True),ignore_index=True)
+
