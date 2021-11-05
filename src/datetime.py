@@ -1,3 +1,4 @@
+# To be filled by students
 import streamlit as st
 from dataclasses import dataclass
 import pandas as pd
@@ -52,26 +53,27 @@ class DateColumn:
   
   def get_future(self):
     """
-    Return number of cases with future dates (after today)
+    Return number of cases with future dates (after today), use Number of days (unique) in the future (after today) instead as per the sample
     """
-    today = pd.to_datetime("today").date()
-    futureday_ct = sum(self.serie > today)
+    today = pd.to_datetime('today').normalize() 
+    
+    futureday_ct = sum(self.serie.unique() > today)
 
-    return 'Number of cases with future dates (after today)' # not working
+    return futureday_ct
 
   def get_empty_1900(self):
     """
     Return number of occurrence of 1900-01-01 value
     """
-    On19000101_ct = sum(self.serie.unique() == pd.to_datetime('1990-01-01').date())
-    return 'Number of occurrence of 1900-01-01 value not working' # not working
+    On19000101_ct = sum(self.serie == pd.to_datetime('1990-01-01').normalize())
+    return On19000101_ct 
 
   def get_empty_1970(self):
     """
     Return number of occurrence of 1970-01-01 value
     """
-    On19700101_ct = sum(self.serie.unique() == pd.to_datetime('1970-01-01').date())
-    return 'Number of occurrence of 1970-01-01 value not working' # not working
+    On19700101_ct = sum(self.serie == pd.to_datetime('1990-01-01').normalize())
+    return On19700101_ct 
 
   def get_min(self):
     """
@@ -89,13 +91,9 @@ class DateColumn:
     """
     Return the generated bar chart for selected column
     """
-    list_x=list(self.serie.unique())
-    list_y=list(self.serie.value_counts())
-    return plt.bar(list_x,list_y)
-    
+    return self.serie.value_counts().plot(kind='bar')
 
-
-
+  
   def get_frequent(self):
     """
     Return the Pandas dataframe containing the occurrences and percentage of the top 20 most frequent values
@@ -109,9 +107,7 @@ class DateColumn:
     for val in temp:
 
       cnt = self.serie[self.serie == val].count()
-      #cnt = self.serie[self.serie == val].value_counts(dropna=False) # why wouldn't this work? 
       occurrence.append(cnt)
-      #percentage.append(cnt / self.serie.value_counts(dropna=False) *100) # why wouldn't this work? 
       percentage.append(cnt / self.serie.count() *100) # do not include <NA> records
 
     df = pd.DataFrame()
@@ -121,4 +117,3 @@ class DateColumn:
 
   # sort by occurrency in descending order and then by value in ascending order (alphabetically) and ignoring the index
     return df.sort_values(['occurrence','value'], ascending=(False,True),ignore_index=True)
-	
