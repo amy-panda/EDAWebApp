@@ -55,13 +55,13 @@ class NumericColumn:
 
     for val in temp:
 
-      cnt = self.serie[self.serie == val].count()
+      cnt = self.serie[self.serie == val].value_counts(dropna=False)
       occurrence.append(cnt)
-      percentage.append(cnt / self.serie.shape[0] * 100)
+      percentage.append(cnt / self.serie.value_counts(dropna=False) * 100)
 
     df = pd.DataFrame()
     df['value'] = temp
     df['occurrences'] = occurrence
     df['percentage'] = percentage
 
-    return df.sort_values('occurrences', ascending=False)
+    return df.sort_values('occurrences', ascending=False) & print(f'{self.serie.value_counts(dropna=False)}')

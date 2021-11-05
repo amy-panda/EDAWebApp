@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 ## 
 @dataclass
 class DateColumn:
@@ -21,7 +22,8 @@ class DateColumn:
     """
     Return number of unique values for selected column
     """
-    return self.serie.unique().shape[0]
+    return self.serie.nunique()
+
 
   def get_missing(self):
     """
@@ -33,8 +35,8 @@ class DateColumn:
     """
     Return number of occurrence of days falling during weekend (Saturday and Sunday)
     """
-    startdate = self.serie.dt.date.min()
-    enddate = self.serie.dt.date.max()
+    startdate = self.serie.dropna().min()
+    enddate = self.serie.dropna().max()
     weekend_ct = pd.bdate_range(startdate,enddate, 
                       freq="C", weekmask="Sat Sun").size
     return weekend_ct
@@ -43,18 +45,19 @@ class DateColumn:
     """
     Return number of weekday days (not Saturday or Sunday)
     """
-    startdate = self.serie.dt.date.min()
-    enddate = self.serie.dt.date.max()
-    weekdays_ct = pd.bdate_range(startdate,
-                      enddate).size
+    startdate1 = self.serie.dropna().min()
+    enddate2 = self.serie.dropna().max()
+    weekdays_ct = pd.bdate_range(startdate1,
+                      enddate2).size
     return weekdays_ct
   
   def get_future(self):
     """
-    Return number of cases with future dates (after today)
+    Return number of cases with future dates (after today), use Number of days (unique) in the future (after today) instead as per the sample
     """
-    today = pd.to_datetime("today").date()
-    futureday_ct = sum(self.serie.dt.date.unique()> today)
+    today = pd.to_datetime('today').normalize() 
+    
+    futureday_ct = sum(self.serie.unique() > today)
 
     return futureday_ct
 
@@ -62,15 +65,15 @@ class DateColumn:
     """
     Return number of occurrence of 1900-01-01 value
     """
-    On19000101_ct = sum(self.serie.dt.date.unique() == pd.to_datetime('1990-01-01').date())
-    return On19000101_ct
+    On19000101_ct = sum(self.serie == pd.to_datetime('1990-01-01').normalize())
+    return On19000101_ct 
 
   def get_empty_1970(self):
     """
     Return number of occurrence of 1970-01-01 value
     """
-    On19700101_ct = sum(self.serie.dt.date.unique() == pd.to_datetime('1970-01-01').date())
-    return On19700101_ct
+    On19700101_ct = sum(self.serie == pd.to_datetime('1990-01-01').normalize())
+    return On19700101_ct 
 
   def get_min(self):
     """
@@ -88,9 +91,11 @@ class DateColumn:
     """
     Return the generated bar chart for selected column
     """
-    list_x=list(self.serie.unique())
-    list_y=list(self.serie.value_counts())
-    return plt.bar(list_x,list_y)
+    return self.serie.value_counts().plot(kind='bar')
+
+    
+
+
 
   def get_frequent(self):
     """
@@ -106,7 +111,7 @@ class DateColumn:
 
       cnt = self.serie[self.serie == val].count()
       occurrence.append(cnt)
-      percentage.append(cnt / self.serie.shape[0])
+      percentage.append(cnt / self.serie.count() *100) # do not include <NA> records
 
     df = pd.DataFrame()
     df['value'] = temp
