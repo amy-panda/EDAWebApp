@@ -8,9 +8,10 @@ import matplotlib.pyplot as plt
 
 
 def Test_Numeric():
-    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">2. Numeric Column Information</p>'
-    st.markdown(new_title, unsafe_allow_html=True)
+    # new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">2. Numeric Column Information</p>'
+    # st.markdown(new_title, unsafe_allow_html=True)
 
+    st.title('2. Numeric Column Information')
     for i, column in enumerate(numeric_columns):
         values = []
 
@@ -27,9 +28,9 @@ def Test_Numeric():
         values.append(obj.get_median())
 
         st.write("")
-        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;">2.{i} Field Name: <strong>{column}</strong></p>'
-        st.markdown(new_title, unsafe_allow_html=True)
-
+        # new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;">2.{i} Field Name: <strong>{column}</strong></p>'
+        # st.markdown(new_title, unsafe_allow_html=True)
+        st.header(f'2.{i} Field Name: {column}')
         df = pd.DataFrame()
         df['value'] = values
 
@@ -45,35 +46,29 @@ def Test_Numeric():
 
         st.dataframe(df)
 
-        print("")
-        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Histogram</strong></p>'
-        st.markdown(new_title, unsafe_allow_html=True)
+        st.write('')
+        # new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Histogram</strong></p>'
+        # st.markdown(new_title, unsafe_allow_html=True)
 
-        fig, ax = plt.subplots(figsize=(20, 7))
+        st.header('Histogram')
+        fig, ax = plt.subplots(figsize=(25, 10))
+
+        try:
+            obj.get_histogram()
+        except:
+            pass
         plt.grid(axis='y')
-        obj.get_histogram()
         plt.xlabel('Value')
         plt.ylabel('Count')
         st.pyplot(fig)
 
         st.write("")
 
-        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Most Frequent Values</strong></p>'
-        st.markdown(new_title, unsafe_allow_html=True)
+        # new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Most Frequent Values</strong></p>'
+        # st.markdown(new_title, unsafe_allow_html=True)
+        st.header('Most Frequent Values')
         df2 = obj.get_frequent()
         st.write(df2)
-
-def Test_Text():
-    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">3. Text Column Information</p>'
-    st.markdown(new_title, unsafe_allow_html=True)
-
-
-
-def Test_Datetime():
-    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">4. Datetime Column Information</p>'
-    st.markdown(new_title, unsafe_allow_html=True)
-
-
 
 
 if __name__ == '__main__':
@@ -84,7 +79,5 @@ if __name__ == '__main__':
         data = pd.read_csv(file)
         numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
         Test_Numeric()
-        Test_Text()
-        Test_Datetime()
     except:
         pass
