@@ -50,8 +50,8 @@ def Func_Datetime():
         st.dataframe(df)
 
         print("")
-        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Bar Chart</strong></p>'
-        st.markdown(new_title, unsafe_allow_html=True)
+
+        st.subheader(f'Bar Chart')
 
         fig, ax = plt.subplots(figsize=(15, 7))
         plt.grid(axis='y')
@@ -65,8 +65,7 @@ def Func_Datetime():
 
         st.write("")
 
-        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Most Frequent Values</strong></p>'
-        st.markdown(new_title, unsafe_allow_html=True)
+        st.subheader(f'Most Frequent Values')
         df2 = obj.get_frequent()
         st.write(df2)
 
