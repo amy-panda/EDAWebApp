@@ -101,16 +101,6 @@ class TestTextColumn(unittest.TestCase):
         
         self.assertEqual(result,expected)
 
-    #this test is not working
-    # def test_get_barchart(self):
-        
-    #     df=pd.DataFrame(self.data)
-    #     tcol=text.TextColumn(col_name='ISO3',serie=df['ISO3'])
-    #     expected=plt.bar(['USA','ASM','GUM','MNP','PRI','VIR'],[53,1,1,1,1,1])
-    #     result=tcol.get_barchart()
-
-    #     self.assertEqual(result,expected)
-
 
     def test_get_frequent(self):
         df=pd.DataFrame(self.data)
