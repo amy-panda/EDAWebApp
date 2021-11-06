@@ -35,21 +35,15 @@ class DateColumn:
     """
     Return number of occurrence of days falling during weekend (Saturday and Sunday)
     """
-    startdate = self.serie.dropna().min()
-    enddate = self.serie.dropna().max()
-    weekend_ct = pd.bdate_range(startdate,enddate, 
-                      freq="C", weekmask="Sat Sun").size
-    return weekend_ct
+    return sum(self.serie.dt.dayofweek >4)
+
 
   def get_weekday(self):
     """
     Return number of weekday days (not Saturday or Sunday)
     """
-    startdate1 = self.serie.dropna().min()
-    enddate2 = self.serie.dropna().max()
-    weekdays_ct = pd.bdate_range(startdate1,
-                      enddate2).size
-    return weekdays_ct
+    return sum(self.serie.dt.dayofweek <5)
+  
   
   def get_future(self):
     """
