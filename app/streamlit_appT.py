@@ -9,8 +9,7 @@ import matplotlib.pyplot as plt
 
 
 def Func_Datetime():
-    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">4. Date Time Column Information</p>'
-    st.markdown(new_title, unsafe_allow_html=True)
+    st.title('4. Date Time Column Information')
 
     for i, column in enumerate(datetime_columns):
         values = []
@@ -32,16 +31,15 @@ def Func_Datetime():
         
 
         st.write("")
-        new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;">4.{i} Field Name: <strong>{column}</strong></p>'
-        st.markdown(new_title, unsafe_allow_html=True)
+        st.subheader(f'4.{i} Field Name:***{column}***')
 
         df = pd.DataFrame()
         df['value'] = values
 
         df.index = ['Number of unique values',
                     'Number of rows with missing values',
-                    'Number of occurrence of days falling during weekend (Saturday and Sunday)',
-                    'Number of weekday days (not Saturday or Sunday)',
+                    'Number of weekend dates',
+                    'Number of weekday dates',
                     'Number of days in the future (after today)',
                     'Number of occurrence of 1900-01-01 value',
                     'Number of occurrence of 1970-01-01 value',
