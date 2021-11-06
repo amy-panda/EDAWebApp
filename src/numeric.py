@@ -3,12 +3,12 @@ import streamlit as st
 import seaborn as sns
 from dataclasses import dataclass
 import pandas as pd
-
+import matplotlib.pyplot as plt
 
 
 @dataclass
 class NumericColumn:
-
+  
   col_name: str
   serie: pd.Series
  
@@ -43,7 +43,7 @@ class NumericColumn:
     return self.serie.median()
 
   def get_histogram(self):
-    return sns.histplot(self.serie)
+    return plt.hist(self.serie, bins = 50)
 
   def get_frequent(self):
 
