@@ -3,7 +3,6 @@ import pandas as pd
 import sys
 import os
 from pandas._libs.missing import NA
-import matplotlib.pyplot as plt
 from pandas.util.testing import assert_frame_equal
 if os.path.abspath(".") not in sys.path: sys.path.append(os.path.abspath("."))
 from src.text import TextColumn
