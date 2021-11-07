@@ -1,7 +1,6 @@
 import unittest
 import pandas as pd
 import sys
-import os
 if os.path.abspath(".") not in sys.path: sys.path.append(os.path.abspath("."))
 from src.numeric import NumericColumn
 from pandas.util.testing import assert_frame_equal
@@ -89,7 +88,7 @@ class Test_Numeric(unittest.TestCase):
                                            18.2208, 41.6809, 33.8569, 44.2998, 35.7478, 31.0545, 40.1500,
                                            44.0459, 18.3358, 37.7693, 47.4009, 38.4912, 47.5289],
                                  'occurrences': [1]*20,
-                                 'percentage': [1.724138]*20})
+                                 'percentage': [0.01724138]*20})
 
         result = ncol.get_frequent()
 
