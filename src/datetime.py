@@ -102,7 +102,7 @@ class DateColumn:
 
       cnt = self.serie[self.serie == val].count()
       occurrence.append(cnt)
-      percentage.append(cnt / self.serie.count() *100) # do not include <NA> records
+      percentage.append(cnt / self.serie.count()) # do not include <NA> records
 
     df = pd.DataFrame()
     df['value'] = temp

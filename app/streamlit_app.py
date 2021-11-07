@@ -6,13 +6,39 @@ if os.path.abspath(".") not in sys.path: sys.path.append(os.path.abspath("."))
 from src.text import TextColumn
 from src.numeric import NumericColumn
 from src.datetime import DateColumn
-
+from src.data import Dataset
 import matplotlib.pyplot as plt
 
 
+def Func_Data():
+    st.title('1. Overall Information')
+    
+    da = Dataset(name=file.name, df=data)
+  
+    '**Name of Table:**', da.get_name()
+    '**Number of Rows:**', str(da.get_n_rows())
+    '**Number of Columns:**', str(da.get_n_cols())
+    '**Number of Duplicated Rows:**', str(da.get_n_duplicates())
+    '**Number of Rows with Missing Values:**', str(da.get_n_missing())
+    '**List of Columns:**'
+    st.text(', '.join(da.get_cols_list()))
+
+    '**Type of Columns:**'
+    st.dataframe(pd.DataFrame.from_dict(da.get_cols_dtype(), orient='index', columns=['type']))
+    
+    rows = st.slider('Select the number of rows to be displayed', min_value=5, max_value=da.df.shape[0], value=5)
+    '**Top Rows of Table**'
+    st.dataframe(da.get_head(n=rows))
+
+    '**Bottom Rows of Table**'
+    st.dataframe(da.get_tail(n=rows))
+
+    '**Random Sample Rows of Table**'
+    st.dataframe(da.get_sample(n=rows))
+
+
+
 def Func_Numeric():
-    # new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">2. Numeric Column Information</p>'
-    # st.markdown(new_title, unsafe_allow_html=True)
 
     st.title('2. Numeric Column Information')
     for i, column in enumerate(numeric_columns):
@@ -31,9 +57,8 @@ def Func_Numeric():
         values.append(obj.get_median())
 
         st.write("")
-        # new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;">2.{i} Field Name: <strong>{column}</strong></p>'
-        # st.markdown(new_title, unsafe_allow_html=True)
-        st.header(f'2.{i} Field Name: {column}')
+
+        st.subheader(f'2.{i} Field Name: {column}')
         df = pd.DataFrame()
         df['value'] = values
 
@@ -50,10 +75,8 @@ def Func_Numeric():
         st.dataframe(df)
 
         st.write('')
-        # new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Histogram</strong></p>'
-        # st.markdown(new_title, unsafe_allow_html=True)
 
-        st.header('Histogram')
+        '**Histogram**'
         fig, ax = plt.subplots(figsize=(25, 10))
 
         try:
@@ -69,7 +92,7 @@ def Func_Numeric():
 
         # new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Most Frequent Values</strong></p>'
         # st.markdown(new_title, unsafe_allow_html=True)
-        st.header('Most Frequent Values')
+        '**Most Frequent Values**'
         df2 = obj.get_frequent()
         st.write(df2)
 
@@ -113,7 +136,7 @@ def Func_Text():
         st.dataframe(df)
 
         print("")
-        st.write('**Bar Chart**')
+        '**Bar Chart**'
 
         fig, ax = plt.subplots(figsize=(15, 7))
         plt.grid(axis='y')
@@ -125,7 +148,7 @@ def Func_Text():
    
 
         st.write("")
-        st.subheader(f'Most Frequent Values')
+        '**Most Frequent Values**'
         
         df2 = obj.get_frequent()
         st.write(df2)
@@ -173,7 +196,7 @@ def Func_Datetime():
 
         print("")
 
-        st.write('**Bar Chart**')
+        '**Bar Chart**'
 
         fig, ax = plt.subplots(figsize=(15, 7))
         plt.grid(axis='y')
@@ -185,7 +208,7 @@ def Func_Datetime():
 
         st.write("")
 
-        st.subheader(f'Most Frequent Values')
+        '**Most Frequent Values**'
         df2 = obj.get_frequent()
         st.write(df2)
 
@@ -196,35 +219,42 @@ if __name__ == '__main__':
     st.title('Data Explorer Tool')
     
     file = st.file_uploader("Choose a CSV file", type=("csv"))
-    st.write("")
-    try:
-        data = pd.read_csv(file)
-        
-        
-        numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
-        Func_Numeric()
-        st.write("")        
 
-        # set the selected columns
+    
+    if file: 
+        extension = file.name.split('.')[1]
+        if extension.upper() != 'CSV':
+            st.warning('Please note only CSV files are accepted, you can upload another file')
+        else:
+            data = pd.read_csv(file)
+            data.columns.name = file.name  
+            da = Dataset(name=file.name, df=data)
 
-        datetimecol = st.multiselect(
-					'Which columns do you want to convert to dates'
-					,data.columns
-                    )
+            
+            Func_Data()
+            
+            cols = st.multiselect('Which columns do you want to convert to dates', 
+                                da.df.columns.tolist()
+                                )
+            for col in cols:
+                try:
+                    da.df[col] = pd.to_datetime(da.df[col])
+                    st.success('Column converted to datetime')
+                except:
+                    st.error('This data type is not available, try something else')   
 
-        #datetimecol = 'Last_Update'
-        # change type of the selected columns
-
-        data[datetimecol] = data[datetimecol].apply(pd.to_datetime)        
-
-        text_columns = list(data.dtypes[(data.dtypes == 'object') | (data.dtypes == 'category')].index)
-        
-        Func_Text()
-
-        datetime_columns = list(data.dtypes[data.dtypes == 'datetime64[ns]'].index)
-        
-        Func_Datetime()        
-        
-    except:
-        pass
+            
+            numeric_columns = list(da.df.select_dtypes(include=['float64','int64']).columns)
+            Func_Numeric()
+            st.write("")
+                    
+            
+            text_columns = list(da.df.select_dtypes(include=['object','category']).columns)
+            Func_Text()
+            st.write("") 
+                
+            datetime_columns = list(da.df.select_dtypes(include='datetime64[ns]').columns)
+            Func_Datetime()        
+            st.write("")           
+            
 
