@@ -61,8 +61,8 @@ def Func_Numeric():
         except:
             pass
         plt.grid(axis='y')
-        plt.xlabel('Value')
-        plt.ylabel('Count')
+        plt.xlabel(f'{column} (binned)')
+        plt.ylabel('Count of Records')
         st.pyplot(fig)
 
         st.write("")
