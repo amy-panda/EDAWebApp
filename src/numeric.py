@@ -1,6 +1,4 @@
 # To be filled by students
-import streamlit as st
-import seaborn as sns
 from dataclasses import dataclass
 import pandas as pd
 import matplotlib.pyplot as plt
