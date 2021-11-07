@@ -1,6 +1,7 @@
 import unittest
 import pandas as pd
 import sys
+import os
 if os.path.abspath(".") not in sys.path: sys.path.append(os.path.abspath("."))
 from src.numeric import NumericColumn
 from pandas.util.testing import assert_frame_equal
