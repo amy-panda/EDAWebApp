@@ -1,84 +1,100 @@
-import streamlit as st
+import unittest
 import pandas as pd
-import os
 import sys
-if os.path.abspath(".") not in sys.path: sys.path.append(os.path.abspath("."))
-from src.numeric import NumericColumn
+sys.path.insert(0, '..')
+import numeric
+from pandas.util.testing import assert_frame_equal
 
-import matplotlib.pyplot as plt
+class Test_Numeric(unittest.TestCase):
+    def setUp(self):
+        self.data = pd.read_csv( 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/01-01-2021.csv')
 
+    def tearDown(self):
+        del self.data
 
-def Test_Numeric():
-    # new_title = '<p style="font-family:sans-serif; color:Black; font-size: 42px;">2. Numeric Column Information</p>'
-    # st.markdown(new_title, unsafe_allow_html=True)
+    def test_get_name(self):
+        ncol = numeric.NumericColumn(col_name='Lat',serie=self.data['Lat'])
+        expected='Lat'
+        result=ncol.get_name()
 
-    st.title('2. Numeric Column Information')
-    for i, column in enumerate(numeric_columns):
-        values = []
+        self.assertEqual(result, expected)
 
-        obj = NumericColumn(col_name=column, serie=data[column])
+    def test_get_unique(self):
+        ncol = numeric.NumericColumn(col_name='Lat', serie=self.data['Lat'])
+        expected = 57
+        result = ncol.get_unique()
 
-        values.append(obj.get_unique())
-        values.append(obj.get_missing())
-        values.append(obj.get_zeros())
-        values.append(obj.get_negatives())
-        values.append(obj.get_mean())
-        values.append(obj.get_std())
-        values.append(obj.get_min())
-        values.append(obj.get_max())
-        values.append(obj.get_median())
+        self.assertEqual(result, expected)
 
-        st.write("")
-        # new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;">2.{i} Field Name: <strong>{column}</strong></p>'
-        # st.markdown(new_title, unsafe_allow_html=True)
-        st.header(f'2.{i} Field Name: {column}')
-        df = pd.DataFrame()
-        df['value'] = values
+    def test_get_missing(self):
+        ncol = numeric.NumericColumn(col_name='Lat', serie=self.data['Lat'])
+        expected = 2
+        result = ncol.get_missing()
 
-        df.index = ['Number of unique values',
-                    'Number of rows with missing values',
-                    'Number of rows with 0',
-                    'Number of rows with negative values',
-                    'Average value',
-                    'Standard deviation value',
-                    'Minimum value',
-                    'Maximum value',
-                    'Median value']
+        self.assertEqual(result, expected)
 
-        st.dataframe(df)
+    def test_get_zeros(self):
+        ncol = numeric.NumericColumn(col_name='Lat', serie=self.data['Lat'])
+        expected = 0
+        result = ncol.get_zeros()
 
-        st.write('')
-        # new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Histogram</strong></p>'
-        # st.markdown(new_title, unsafe_allow_html=True)
+        self.assertEqual(result, expected)
 
-        st.header('Histogram')
-        fig, ax = plt.subplots(figsize=(25, 10))
+    def test_get_negatives(self):
+        ncol = numeric.NumericColumn(col_name='Lat', serie=self.data['Lat'])
+        expected = 1
+        result = ncol.get_negatives()
 
-        try:
-            obj.get_histogram()
-        except:
-            pass
-        plt.grid(axis='y')
-        plt.xlabel('Value')
-        plt.ylabel('Count')
-        st.pyplot(fig)
+        self.assertEqual(result, expected)
 
-        st.write("")
+    def test_get_mean(self):
+        ncol = numeric.NumericColumn(col_name='Lat', serie=self.data['Lat'])
+        expected = 36.840089285714285
+        result = ncol.get_mean()
 
-        # new_title = f'<p style="thick: bold; font-family:sans-serif; color:Black; font-size: 20px;"><strong>Most Frequent Values</strong></p>'
-        # st.markdown(new_title, unsafe_allow_html=True)
-        st.header('Most Frequent Values')
-        df2 = obj.get_frequent()
-        st.write(df2)
+        self.assertEqual(result, expected)
 
+    def test_get_std(self):
+        ncol = numeric.NumericColumn(col_name='Lat', serie=self.data['Lat'])
+        expected = 10.887035414985837
+        result = ncol.get_std()
+
+        self.assertEqual(result, expected)
+
+    def test_get_min(self):
+        ncol = numeric.NumericColumn(col_name='Lat', serie=self.data['Lat'])
+        expected = -14.271
+        result = ncol.get_min()
+
+        self.assertEqual(result, expected)
+
+    def test_get_max(self):
+        ncol = numeric.NumericColumn(col_name='Lat', serie=self.data['Lat'])
+        expected = 61.3707
+        result = ncol.get_max()
+
+        self.assertEqual(result, expected)
+
+    def test_get_median(self):
+        ncol = numeric.NumericColumn(col_name='Lat', serie=self.data['Lat'])
+        expected = 39.06185
+        result = ncol.get_median()
+
+        self.assertEqual(result, expected)
+
+    def test_get_frequent(self):
+        ncol = numeric.NumericColumn(col_name='Lat', serie=self.data['Lat'])
+        expected = pd.DataFrame({'value': [42.7560, 44.2685, 15.0979, 40.3888, 35.5653, 44.5720, 40.5908,
+                                           18.2208, 41.6809, 33.8569, 44.2998, 35.7478, 31.0545, 40.1500,
+                                           44.0459, 18.3358, 37.7693, 47.4009, 38.4912, 47.5289],
+                                 'occurrences': [1]*20,
+                                 'percentage': [1.724138]*20})
+
+        result = ncol.get_frequent()
+
+        assert_frame_equal(result.reset_index(drop=True), expected.reset_index(drop=True))
 
 if __name__ == '__main__':
 
-    file = st.file_uploader("Upload file", type=("csv"))
-    st.write("")
-    try:
-        data = pd.read_csv(file)
-        numeric_columns = list(data.dtypes[(data.dtypes == 'float64') | (data.dtypes == 'int64')].index)
-        Test_Numeric()
-    except:
-        pass
+
+     unittest.main()
